@@ -1,0 +1,248 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown to PDF Converter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                borderRadius: {
+                    lg: "var(--radius)",
+                    md: "calc(var(--radius) - 2px)",
+                    sm: "calc(var(--radius) - 4px)",
+                },
+                colors: {
+                    background: "var(--background)",
+                    foreground: "var(--foreground)",
+                    card: {
+                        DEFAULT: "var(--card)",
+                        foreground: "var(--card-foreground)",
+                    },
+                    popover: {
+                        DEFAULT: "var(--popover)",
+                        foreground: "var(--popover-foreground)",
+                    },
+                    primary: {
+                        DEFAULT: "var(--primary)",
+                        foreground: "var(--primary-foreground)",
+                    },
+                    secondary: {
+                        DEFAULT: "var(--secondary)",
+                        foreground: "var(--secondary-foreground)",
+                    },
+                    muted: {
+                        DEFAULT: "var(--muted)",
+                        foreground: "var(--muted-foreground)",
+                    },
+                    accent: {
+                        DEFAULT: "var(--accent)",
+                        foreground: "var(--accent-foreground)",
+                    },
+                    destructive: {
+                        DEFAULT: "var(--destructive)",
+                        foreground: "var(--destructive-foreground)",
+                    },
+                    border: "var(--border)",
+                    input: "var(--input)",
+                    ring: "var(--ring)",
+                },
+                fontFamily: {
+                    sans: ["Inter", "var(--font-sans)"],
+                    mono: ["Fira Code", "var(--font-mono)"],
+                }
+            },
+        }
+    };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --background: hsl(0 0% 100%);
+            --foreground: hsl(210 11% 15%);
+            --card: hsl(0 0% 100%);
+            --card-foreground: hsl(210 11% 15%);
+            --popover: hsl(0 0% 100%);
+            --popover-foreground: hsl(210 11% 15%);
+            --primary: hsl(212 78% 46%);
+            --primary-foreground: hsl(0 0% 100%);
+            --secondary: hsl(210 40% 96%);
+            --secondary-foreground: hsl(210 11% 15%);
+            --muted: hsl(210 40% 96%);
+            --muted-foreground: hsl(210 10% 57%);
+            --accent: hsl(142 71% 45%);
+            --accent-foreground: hsl(0 0% 100%);
+            --destructive: hsl(0 84% 60%);
+            --destructive-foreground: hsl(0 0% 98%);
+            --border: hsl(214 32% 91%);
+            --input: hsl(214 32% 91%);
+            --ring: hsl(212 78% 46%);
+            --radius: 6px;
+        }
+
+        .editor-container {
+            resize: horizontal;
+            min-width: 300px;
+            max-width: calc(100% - 300px);
+        }
+
+        .markdown-editor {
+            font-family: 'Fira Code', monospace;
+            resize: none;
+            outline: none;
+            border: none;
+        }
+
+        .markdown-editor:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        .toolbar-button {
+            transition: all 0.2s ease;
+        }
+
+        .toolbar-button:hover {
+            background-color: var(--muted);
+            transform: translateY(-1px);
+        }
+
+        .resizer {
+            cursor: col-resize;
+            background: var(--border);
+            transition: background 0.2s ease;
+        }
+
+        .resizer:hover {
+            background: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .desktop-layout {
+                flex-direction: column;
+            }
+            
+            .editor-container {
+                resize: none;
+                min-width: 100%;
+                max-width: 100%;
+            }
+        }
+
+        .loading-spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .preview-content h1 { font-size: 2em; font-weight: 600; margin: 1em 0 0.5em 0; }
+        .preview-content h2 { font-size: 1.5em; font-weight: 600; margin: 1em 0 0.5em 0; }
+        .preview-content h3 { font-size: 1.25em; font-weight: 600; margin: 1em 0 0.5em 0; }
+        .preview-content p { margin: 0.5em 0; line-height: 1.6; }
+        .preview-content ul, .preview-content ol { margin: 0.5em 0; padding-left: 2em; }
+        .preview-content li { margin: 0.25em 0; }
+        .preview-content code { background: var(--muted); padding: 0.125em 0.25em; border-radius: 3px; font-family: 'Fira Code', monospace; }
+        .preview-content pre { background: var(--muted); padding: 1em; border-radius: 6px; overflow-x: auto; margin: 1em 0; }
+        .preview-content pre code { background: none; padding: 0; }
+        .preview-content blockquote { border-left: 4px solid var(--border); margin: 1em 0; padding: 0.5em 1em; background: var(--muted); }
+        .preview-content table { border-collapse: collapse; width: 100%; margin: 1em 0; }
+        .preview-content th, .preview-content td { border: 1px solid var(--border); padding: 0.5em; text-align: left; }
+        .preview-content th { background: var(--muted); font-weight: 600; }
+    </style>
+</head>
+<body class="bg-background text-foreground font-sans">
+    <!-- @COMPONENT: Header -->
+    <header class="border-b border-border bg-card">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-file-markdown text-2xl text-primary"></i>
+                    <h1 class="text-xl font-semibold">Markdown to PDF</h1>
+                </div>
+                <div class="hidden md:block text-sm text-muted-foreground">
+                    Convert your Markdown to beautiful PDFs
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-2">
+                <button class="toolbar-button flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-foreground hover:bg-muted" data-mock="true">
+                    <i class="fas fa-cog"></i>
+                    <span class="hidden sm:inline">Settings</span>
+                </button>
+                <button class="toolbar-button flex items-center space-x-2 px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 shadow-sm" data-implementation="Should generate and download PDF file" data-mock="true">
+                    <i class="fas fa-download"></i>
+                    <span>Download PDF</span>
+                </button>
+            </div>
+        </div>
+    </header>
+    <!-- @END_COMPONENT: Header -->
+
+    <!-- @COMPONENT: MainContent -->
+    <main class="flex-1 flex desktop-layout" style="height: calc(100vh - 73px);">
+        <!-- @COMPONENT: EditorPane -->
+        <div class="editor-container flex-1 flex flex-col border-r border-border bg-card">
+            <!-- Editor Toolbar -->
+            <div class="flex items-center justify-between px-4 py-3 border-b border-border bg-muted/30">
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm font-medium">Markdown Editor</span>
+                    <div class="flex items-center space-x-1 ml-4">
+                        <button class="toolbar-button p-1.5 rounded hover:bg-muted" title="Bold" data-mock="true">
+                            <i class="fas fa-bold text-xs"></i>
+                        </button>
+                        <button class="toolbar-button p-1.5 rounded hover:bg-muted" title="Italic" data-mock="true">
+                            <i class="fas fa-italic text-xs"></i>
+                        </button>
+                        <button class="toolbar-button p-1.5 rounded hover:bg-muted" title="Code" data-mock="true">
+                            <i class="fas fa-code text-xs"></i>
+                        </button>
+                        <div class="w-px h-4 bg-border mx-1"></div>
+                        <button class="toolbar-button p-1.5 rounded hover:bg-muted" title="Link" data-mock="true">
+                            <i class="fas fa-link text-xs"></i>
+                        </button>
+                        <button class="toolbar-button p-1.5 rounded hover:bg-muted" title="Image" data-mock="true">
+                            <i class="fas fa-image text-xs"></i>
+                        </button>
+                        <button class="toolbar-button p-1.5 rounded hover:bg-muted" title="List" data-mock="true">
+                            <i class="fas fa-list text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="text-xs text-muted-foreground">
+                    <span data-bind="characterCount">1,247</span> characters
+                </div>
+            </div>
+            
+            <!-- Editor Content -->
+            <div class="flex-1 relative">
+                <textarea 
+                    class="markdown-editor w-full h-full p-4 bg-background text-foreground text-sm leading-6 font-mono placeholder:text-muted-foreground" 
+                    placeholder="Start typing your Markdown here..."
+                    data-mock="true"
+                    data-implementation="Should have real-time syntax highlighting and live preview updates"
+                ># Welcome to Markdown to PDF Converter
+
+This is a **powerful** and *easy-to-use* tool for converting your Markdown documents to beautifully formatted PDF files.
+
+## Features
+
+- ✅ Real-time live preview
+- ✅ Syntax highlighting
+- ✅ Professional PDF output
+- ✅ Responsive design
+- ✅ GitHub-inspired interface
+
+## Code Example
+
+```javascript
+function convertToPDF(markdown) {
+    // TODO: Implement PDF generation logic
+    return generatePDF(markdown);
+}

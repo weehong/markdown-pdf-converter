@@ -1,0 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500;600&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0 0% 100%);
+  --foreground: hsl(210 11% 15%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(210 11% 15%);
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(210 11% 15%);
+  --primary: hsl(212 78% 46%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(210 40% 96%);
+  --secondary-foreground: hsl(210 11% 15%);
+  --muted: hsl(210 40% 96%);
+  --muted-foreground: hsl(210 10% 57%);
+  --accent: hsl(142 71% 45%);
+  --accent-foreground: hsl(0 0% 100%);
+  --destructive: hsl(0 84% 60%);
+  --destructive-foreground: hsl(0 0% 98%);
+  --border: hsl(214 32% 91%);
+  --input: hsl(214 32% 91%);
+  --ring: hsl(212 78% 46%);
+  --chart-1: hsl(212 78% 46%);
+  --chart-2: hsl(159.7826 100% 36.0784%);
+  --chart-3: hsl(42.0290 92.8251% 56.2745%);
+  --chart-4: hsl(147.1429 78.5047% 41.9608%);
+  --chart-5: hsl(341.4894 75.2000% 50.9804%);
+  --sidebar: hsl(210 40% 96%);
+  --sidebar-foreground: hsl(210 11% 15%);
+  --sidebar-primary: hsl(212 78% 46%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(210 40% 96%);
+  --sidebar-accent-foreground: hsl(212 78% 46%);
+  --sidebar-border: hsl(214 32% 91%);
+  --sidebar-ring: hsl(212 78% 46%);
+  --font-sans: 'Inter', sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: 'Fira Code', monospace;
+  --radius: 6px;
+  --shadow-2xs: 0px 2px 0px 0px hsl(212 78% 46% / 0.00);
+  --shadow-xs: 0px 2px 0px 0px hsl(212 78% 46% / 0.00);
+  --shadow-sm: 0px 2px 0px 0px hsl(212 78% 46% / 0.00), 0px 1px 2px -1px hsl(212 78% 46% / 0.00);
+  --shadow: 0px 2px 0px 0px hsl(212 78% 46% / 0.00), 0px 1px 2px -1px hsl(212 78% 46% / 0.00);
+  --shadow-md: 0px 2px 0px 0px hsl(212 78% 46% / 0.00), 0px 2px 4px -1px hsl(212 78% 46% / 0.00);
+  --shadow-lg: 0px 2px 0px 0px hsl(212 78% 46% / 0.00), 0px 4px 6px -1px hsl(212 78% 46% / 0.00);
+  --shadow-xl: 0px 2px 0px 0px hsl(212 78% 46% / 0.00), 0px 8px 10px -1px hsl(212 78% 46% / 0.00);
+  --shadow-2xl: 0px 2px 0px 0px hsl(212 78% 46% / 0.00);
+  --tracking-normal: 0em;
+  --spacing: 0.25rem;
+}
+
+.dark {
+  --background: hsl(0 0% 0%);
+  --foreground: hsl(200 6.6667% 91.1765%);
+  --card: hsl(228 9.8039% 10%);
+  --card-foreground: hsl(0 0% 85.0980%);
+  --popover: hsl(0 0% 0%);
+  --popover-foreground: hsl(200 6.6667% 91.1765%);
+  --primary: hsl(212 78% 46%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(195.0000 15.3846% 94.9020%);
+  --secondary-foreground: hsl(210 25% 7.8431%);
+  --muted: hsl(0 0% 9.4118%);
+  --muted-foreground: hsl(210 3.3898% 46.2745%);
+  --accent: hsl(205.7143 70% 7.8431%);
+  --accent-foreground: hsl(212 78% 46%);
+  --destructive: hsl(0 84% 60%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --border: hsl(210 5.2632% 14.9020%);
+  --input: hsl(207.6923 27.6596% 18.4314%);
+  --ring: hsl(212 78% 46%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+.editor-container {
+  resize: horizontal;
+  min-width: 300px;
+  max-width: calc(100% - 300px);
+}
+
+.markdown-editor {
+  font-family: 'Fira Code', monospace;
+  resize: none;
+  outline: none;
+  border: none;
+}
+
+.markdown-editor:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.toolbar-button {
+  transition: all 0.2s ease;
+}
+
+.toolbar-button:hover {
+  background-color: var(--muted);
+  transform: translateY(-1px);
+}
+
+.resizer {
+  cursor: col-resize;
+  background: var(--border);
+  transition: background 0.2s ease;
+}
+
+.resizer:hover {
+  background: var(--primary);
+}
+
+@media (max-width: 768px) {
+  .desktop-layout {
+    flex-direction: column;
+  }
+  
+  .editor-container {
+    resize: none;
+    min-width: 100%;
+    max-width: 100%;
+  }
+}
+
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.preview-content h1 { font-size: 2em; font-weight: 600; margin: 1em 0 0.5em 0; }
+.preview-content h2 { font-size: 1.5em; font-weight: 600; margin: 1em 0 0.5em 0; }
+.preview-content h3 { font-size: 1.25em; font-weight: 600; margin: 1em 0 0.5em 0; }
+.preview-content p { margin: 0.5em 0; line-height: 1.6; }
+.preview-content ul, .preview-content ol { margin: 0.5em 0; padding-left: 2em; }
+.preview-content li { margin: 0.25em 0; }
+.preview-content code { background: var(--muted); padding: 0.125em 0.25em; border-radius: 3px; font-family: 'Fira Code', monospace; }
+.preview-content pre { background: var(--muted); padding: 1em; border-radius: 6px; overflow-x: auto; margin: 1em 0; }
+.preview-content pre code { background: none; padding: 0; }
+.preview-content blockquote { border-left: 4px solid var(--border); margin: 1em 0; padding: 0.5em 1em; background: var(--muted); }
+.preview-content table { border-collapse: collapse; width: 100%; margin: 1em 0; }
+.preview-content th, .preview-content td { border: 1px solid var(--border); padding: 0.5em; text-align: left; }
+.preview-content th { background: var(--muted); font-weight: 600; }
